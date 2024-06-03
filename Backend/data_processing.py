@@ -1,43 +1,33 @@
 # TODO Fetch and prcoess protein data via uniport api 
 import requests
-import urllib.parse
 
-def create_uniprot_url():
-    protein_name = input("Please enter the name of the protein you want: ").strip()
-    max_sequence_length = input("Please enter the maximum length of the seqeunce: ").strip()
-    # gene_name = input("Please enter the gene name you are looking for ").strip()
-    reviewed = input("Would you like only reviewed entries? (yes/no): ").strip().lower()
 
-    # Convert reviewed to a boolean for the querys string
-    reviewed = "true" if reviewed in ["yes", "y"] else "false"
-
-    # Construct my query string 
-    query = f"(protein_name:{protein_name}) AND " \
-            f"(length: [{0} TO {max_sequence_length}])  AND " \
-            f"(reviewed: {reviewed})"
-    
-    # URL-encode the query string so its safe to use in a URL
-    encoded_query = urllib.parse.quote(query)
-
-    # Create URL for API request
-    url = f"https://rest.uniprot.org/uniprotkb/stream?compressed=false&format=fasta&query={encoded_query}"
- 
-    # return the URL
+def create_pdb_url():
+    # Prompt user for protein entry id 
+    entry_id = input("Please enter the entry id of the organism you want: ").strip()
+    # Create URL for the pbd file
+    url = f"https://files.rcsb.org/download/{entry_id}.pdb"
     return url
 
-# Get the url via user input
-url = create_uniprot_url()
+def fetch_pdb_file():
+    # Get the url via user input
+    pdb_url = create_pdb_url()
 
-# Fetch data from the api
+    # Fetch data from the api
+    response = requests.get(pdb_url)
+    print(pdb_url)
 
-response = requests.get(url)
+# Check that data was obtained and store it in a protein pdb file
+    if response.status_code == 200:
+        pdb_filename = "protein.pdb"
+        # Write the structure data from the api into the file
+        with open(pdb_filename, "w") as file:
+            file.write(response.text)
+        print(f"PDB file saved successfully as {pdb_filename}.")
+        return pdb_filename
+    else:
+        print(f"Failed to fetch PDB file. Status code: {response.status_code}")
+        return None
 
-# Test
-if response.status_code == 200:
-    all_fastas = response.text
-    print("Data fetched successfully.")
-else:
-    print(f"Failed to fetch data. Status code: {response.status_code}")
 
-# Print the first 500 characters of the fetched data to check
-print(all_fastas[:500])
+pdb_filename = fetch_pdb_file()
