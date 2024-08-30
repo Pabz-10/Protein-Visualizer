@@ -13,3 +13,13 @@ The program uses PyMOL a molecualr visualization tool thats used to render the 3
 ```
 git clone https://github.com/Pabz-10/protein-visualizer.git
 ```
+2. Install PyMOL
+3. Install the requests library
+```
+pip install requests
+```
+# Usage 
+To run the program, make sure you're in the Backend directory and enter the command below in the terminal
+```
+python protein_visualization.py
+```
