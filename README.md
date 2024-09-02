@@ -23,3 +23,5 @@ To run the program, make sure you're in the Backend directory and enter the comm
 ```
 python protein_visualization.py
 ```
+# Liscense
+This project is licensed under the [MIT](https://github.com/git/git-scm.com/blob/main/MIT-LICENSE.txt) License.
